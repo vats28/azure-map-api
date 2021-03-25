@@ -1,25 +1,30 @@
+import json
 import logging
 
 import azure.functions as func
-from .OsrmHelper import OsrmHelper
+from requests.models import Response
+from .HeremapHelper import HeremapHelper
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-    name = req.params.get('name') # get param received
-    if not name:
-        try:
-            req_body = req.get_json() # post data received
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name') + ', New to your location are ' + OsrmHelper().getNearByPlaces({'lat_lng':'28,77'}) + ' with in ' + OsrmHelper().getDistances({'lat_lng':'28,77'})
+    req_body = req.get_json()
+    type = req_body["type"] # req.params.get('name') # get param received
+    coordinates = req_body["coordinates"] # get param received
+    response = {
+        "success": "0",
+        "msg":"some error occured"
+    }
 
-    if name:
-        return func.HttpResponse(f"Hello, {name}.")
+    if not type:
+            return func.HttpResponse(f"No action mentioned!!!!")
     else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
-
+        if(type == "geocode"):
+             response = HeremapHelper().getNearByPlaces(coordinates)
+        else:
+             response = HeremapHelper().getDistances(coordinates)
     
+    return func.HttpResponse(
+                str(response),
+                status_code=200,
+                mimetype='application/json'
+            )

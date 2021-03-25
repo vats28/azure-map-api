@@ -1,14 +1,14 @@
 import json
 import requests
 
-api_key = 'It1p0Cie4VSeGAhwOCXZluaM4755og543pFeZ2Wz2nE'
+api_key = '_XPMCz2xn7ab98iHJVy95r_FasJ7uhdThtEzkj3eQ88'#'It1p0Cie4VSeGAhwOCXZluaM4755og543pFeZ2Wz2nE'
 
 class HeremapHelper:
-	def __init__(self,raw_coord):
-		self.raw_coord = raw_coord
+	# def __init__(self,raw_coord):
+	# 	self.raw_coord = raw_coord
 
-	def getDistances(self):
-		coord_split = self.raw_coord.split(';')
+	def getDistances(self, raw_coord):
+		coord_split = raw_coord.split(';')
 		lat1 = coord_split[0].split(',')[0]
 		long1 = coord_split[0].split(',')[1]
 		lat2 = coord_split[1].split(',')[0]
@@ -25,7 +25,7 @@ class HeremapHelper:
 		source = lat1 + ',' + long1
 		destination = lat2 + ',' + long2
 
-		distance = str(data['distance']) + ' m'
+		distance = str(data['distance'])
 
 		api_response = {
 			'Source':f'{lat1},{long1}',
@@ -36,9 +36,9 @@ class HeremapHelper:
 		return api_response
 
 
-	def getNearByPlaces(self):
+	def getNearByPlaces(self, raw_coord):
 
-		coord_split = self.raw_coord.split(',')
+		coord_split = raw_coord.split(',')
 		lat = coord_split[0]
 		lon = coord_split[1]
 
